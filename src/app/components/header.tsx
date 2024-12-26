@@ -1,17 +1,37 @@
 'use client'
-import React , {useState} from 'react'
+import React , {useState, useEffect} from 'react'
 import { Button, Nav, NavLink, Image, Navbar, Row, Col } from 'react-bootstrap'
 import x from '@/css/header.module.css'
 import LoginPopUp from './loginPopUp'
+import userData from '../store/userData';
+import fetcher from '../api/fetcher'
+import User from '../interface/user'
 export default function Header() {
-    const [flag, setFlag] = useState('https://topik.migii.net/images/icons/ic_flag_en.png');
     const flags = ["https://topik.migii.net/images/icons/ic_flag_en.png", "https://topik.migii.net/images/icons/ic_flag_vi.png"];
+    const [flag,setFlag] = useState(flags[0]);
     const [isDisabledFlags, setIsDisabledFlags] = useState(false);
     const [isDiableLoginPopUp, setIsDiableLoginPopUp] = useState(false);
+    const [isLogged, setIsLogged] = useState(false);
+    const [user, setUser] = useState<User>();
     const changeFlag = (newFlag:string) =>{
+        userData.setFlag(newFlag);
         setFlag(newFlag);
         setIsDisabledFlags(false);
     }
+    const updateUserData  = async() => {
+        console.log('update user data');
+        const flag = userData.getFlag();
+        if(flag) setFlag(flag)
+        const isLogged = userData.getIsLogged();
+        if(isLogged) {
+            setIsLogged(isLogged);
+            const userLoading = await fetcher.getUser(userData.getUserName());
+            setUser(userLoading);
+        }
+    }
+    useEffect(()=>{
+        updateUserData();
+    },[])
     return (
         <div>
         <Row className={x['header']}>
@@ -56,16 +76,33 @@ export default function Header() {
                                 ))}
                             </div>
                         ) : null}
+                        {isLogged===true ? (
+                            <Button
+                                variant='primary'
+                                onClick={() => setIsLogged(false)}
+                            >
+                            Log out
+                            </Button>
+                        ) : 
                         <Button 
                         variant='primary'
                         onClick={() => setIsDiableLoginPopUp(true)}
                         className={x['header__login__button']}
                         >Log In</Button>
+                        }
                     </Nav>
                 </Col>
             </Row>
-            <LoginPopUp isShow= {isDiableLoginPopUp} onClose={() => setIsDiableLoginPopUp(false)}/>
-
+            {isLogged === true && user &&  user.avatar ? (
+                <Image
+                className={x['header__avatar']}
+                src={user.avatar}
+                width={30}
+                height={30}
+                alt='Avatar'
+                />
+            ) : null}
+            <LoginPopUp isShow= {isDiableLoginPopUp} onClose={() => setIsDiableLoginPopUp(false) } updateData = {() => updateUserData()}/>
         </div>
     )
 }

@@ -1,3 +1,13 @@
+.signUpPopUp__overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Màu nền tối với độ trong suốt */
+  z-index: 999; /* Đảm bảo lớp phủ nằm dưới pop-up */
+}
+
 .signUpPopUp {
     position: fixed;
     top: 50%;

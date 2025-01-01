@@ -1,13 +1,13 @@
 interface SignUpFormValues {
-    userName: string;
+    username: string;
     email: string;
     password: string;
 }
 
 const validateSignUp = (values: SignUpFormValues) => {
-    const { userName, email, password } = values;
+    const { username, email, password } = values;
     let isPassed = true;
-    if (userName.length < 8 || /\s/.test(userName)) {
+    if (username.length < 8 || /\s/.test(username)) {
       alert('Username must be at least 8 characters long and contain no spaces');
       isPassed = false;
     } else if (!/\S+@\S+\.\S+/.test(email) || /\s/.test(email)) {

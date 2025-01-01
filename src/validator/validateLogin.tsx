@@ -1,13 +1,13 @@
 interface LogInFormValues {
-    userName: string;
+    username: string;
     password: string;
 }
 
 
 const validateLogIn = (values : LogInFormValues) =>{
-    const {userName, password} = values;
+    const {username, password} = values;
     let isPassed = true;
-    if (userName.length < 8 || /\s/.test(userName)) {
+    if (username.length < 8 || /\s/.test(username)) {
         alert('Username must be at least 8 characters long and contain no spaces');
         isPassed = false;
     }

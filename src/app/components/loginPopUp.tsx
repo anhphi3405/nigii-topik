@@ -3,49 +3,43 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import x from '@/css/loginPopUp.module.css';
 import SignUpPopUp from './signUpPopUp';
 import { Button } from 'react-bootstrap';
-import fetcher from '../api/fetcher';
 import validateLogIn from '@/validator/validateLogin';
-import userData from '../store/userData';
-interface LoginPopUpProps {
-  isShow: boolean;
-  onClose: () => void;
-  updateData: () => void;
-}
+import { LoginPopUpProps } from '../interface/login';
+import {loginUser, apiResponse} from '@/redux/apiRequest';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-export default function LoginPopUp({ isShow, onClose , updateData}: LoginPopUpProps) {
+export default function LoginPopUp({ isShow, onClose}: LoginPopUpProps) {
   const [isDisabledSignUpPopUp, setIsDisabledSignUpPopUp] = useState(false);
-  const [userName, setUserName] = useState('');
+  const [username, setUserName] = useState('');
   const [password, setPassword] = useState(''); 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+ 
   const showSignUpPopUp = () =>{
     onClose();
     setIsDisabledSignUpPopUp(true);  
   }
 
   const handleLogIn = async () =>{
-      if(!validateLogIn({userName, password})) return;
-      try{
-        const response = await fetcher.postCheckUser({userName, password});
-          console.log(response);
-          if(!response) return;
-          if(response.status === 401){
-              alert('Username or password is incorrect');
-          }
-          else if(response.status === 200){
-              alert('Log in successfully');
-              userData.setIgLogged(true);
-              userData.setUserName(userName);
-              updateData();
-              onClose();
-          }
+      const newUser = {username, password};
+      // console.log(newUser);
+      if(!validateLogIn(newUser)) return;
+      await loginUser({ user: newUser, dispatch, navigate });
+      if(apiResponse.loginState) {
+        alert("Login Successful");
+        onClose();
+        window.location.reload();
       }
-      catch(e){
-          console.log(e);
+      else{
+        alert("Login Failed");
       }
   }
 
   return (
     <>
       {isShow && (
+        <div className={x['loginPopUp__overlay']}>
         <div className={x['loginPopUp']}>
           <div className={x['loginPopUp__container']}>
             <div className={x['loginPopUp__container__header']}>
@@ -83,6 +77,7 @@ export default function LoginPopUp({ isShow, onClose , updateData}: LoginPopUpPr
             </div>
           </div>
         </div>
+        </div>
       )}
       {isDisabledSignUpPopUp && (
         <SignUpPopUp isShow={isDisabledSignUpPopUp} onClose={() => setIsDisabledSignUpPopUp(false)} />
@@ -90,3 +85,4 @@ export default function LoginPopUp({ isShow, onClose , updateData}: LoginPopUpPr
     </>
   );
 }
+

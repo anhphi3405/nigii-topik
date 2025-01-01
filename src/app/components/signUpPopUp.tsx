@@ -3,41 +3,33 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import x from '@/css/signUpPopUp.module.css';
 import { Button } from 'react-bootstrap';
 import validateSignUp from '@/validator/validateSignUp';
-import fetcher from '../api/fetcher';
-interface SignUpPopUpProps {
-  isShow: boolean;
-  onClose: () => void;
-}
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { SignUpPopUpProps } from '../interface/signUp';
+import { registerUser, apiResponse } from '@/redux/apiRequest';
 
 export default function SignUpPopUp({ isShow, onClose }: SignUpPopUpProps) {
-    const [userName, setUserName] = useState('');
+    const [username, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    console.log(userName);
-    const handlePostUser = async () =>{
-        if(!validateSignUp({userName, email, password})) return;
-        try{ 
-            const response = await fetcher.postUser({userName, email, password});
-            console.log(response);
-            if(!response) return;
-            if(response.status === 200){
-                alert('Sign up successfully');
-                onClose();
-            } 
-            else if(response.status ===401){
-                alert('Email is already exists');
-            }
-            else if(response.status === 402){
-                alert('Username already exists');
-            }
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const handleRegister = async () =>{
+        const newUser = {username, email, password};
+        if(!validateSignUp(newUser)) return;
+        await registerUser({user : newUser, dispatch, navigate});
+        if(apiResponse.registerState){
+            alert("Registration Successful");
+            onClose();
         }
-        catch(e){
-            console.log(e);
+        else{
+            alert("Username or Email already exists");
         }
     }
     return (
     <>
       {isShow && (
+        <div className={x['signUpPopUp__overlay']}>
         <div className={x['signUpPopUp']}>
           <div className={x['signUpPopUp__container']}>
             <div className={x['signUpPopUp__container__header']}>
@@ -67,13 +59,14 @@ export default function SignUpPopUp({ isShow, onClose }: SignUpPopUpProps) {
               />
               <Button
               variant='danger'
-              onClick={() => handlePostUser()}
+              onClick={() =>  handleRegister()}
               >Sign Up</Button>
             </div>
             <div className={x['signUpPopUp__container__footer']}>
               <p>Already have an account? <Button>Log in</Button></p>
             </div>
           </div>
+        </div>
         </div>
       )}
     </>

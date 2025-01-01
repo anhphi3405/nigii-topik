@@ -1,0 +1,75 @@
+.homePage{
+    height: auto;
+    width: 100vw;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 68px;
+}
+
+.banner{
+    height: 55vh;
+    width: 100%;
+    background-image: url('https://topik.migii.net/images/banner/TOPIK%20_%20EN1.webp');
+    background-size: cover;
+    background-position: center;
+}
+
+.learningPathH1{
+    text-align: center;
+    font-size: 28px;
+    margin-top: 40px;
+    font-weight: bold;
+}
+
+.topikList{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.topikItem{
+    width: 400px;
+    height: 250px;
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    background-color: aqua;
+}
+
+.topikItem__title{
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    position: relative;;
+    top: 50%;
+}
+
+
+.features__list{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+
+
+
+.features__item__img{
+    object-fit: cover;
+}
+
+.features__item__title{
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+
+}
+
+.features__item{
+    margin-right: 40px;
+}
+
+

@@ -1,4 +1,4 @@
-import x from '@/css/homePage.module.css'
+import x from '@/layout/homePage/homePage.module.css'
 import Image from 'next/image'
 
 
@@ -19,6 +19,7 @@ export default function Home() {
     }
 
   ]
+
   return (
     <div className={x['homePage']}> 
         <div className={x['banner']}>

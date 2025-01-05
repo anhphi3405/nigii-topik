@@ -1,18 +1,13 @@
 import axios from "axios";
 import { loginStart, loginSuccess, loginFailure , registerStart, registerSuccess, registerFailure} from "./authSlice";
-import { LoginApiRequestProps } from "@/app/interface/login"
-import { RegisterApiRequestProps } from "@/app/interface/signUp"
-const apiResponse = {
-    loginState: true,
-    registerState: false,
-}
+import { LoginApiRequestProps } from "@/helper/interface/login"
+import { RegisterApiRequestProps } from "@/helper/interface/signUp"
 
 const loginUser = async ({user, dispatch, navigate} : LoginApiRequestProps) =>{
     dispatch(loginStart());
     try{
-        console.log(user);
         const res = await axios.post("http://localhost:5000/v1/auth/login", user);
-        if(res.status == 200) apiResponse.loginState = true;
+        console.log(res.data);
         dispatch(loginSuccess(res.data));
         navigate("/");
     }
@@ -25,8 +20,7 @@ const loginUser = async ({user, dispatch, navigate} : LoginApiRequestProps) =>{
 const registerUser = async ({user, dispatch, navigate} : RegisterApiRequestProps) =>{
     dispatch(registerStart());
     try{
-        const res = await axios.post("http://localhost:5000/v1/auth/register", user);
-        if(res.status == 201) apiResponse.registerState = true;
+        await axios.post("http://localhost:5000/v1/auth/register", user);
         dispatch(registerSuccess());
         navigate("/");
     }
@@ -39,4 +33,4 @@ const registerUser = async ({user, dispatch, navigate} : RegisterApiRequestProps
 
 
 
-export {loginUser, registerUser, apiResponse}; ;
+export {loginUser, registerUser}; ;

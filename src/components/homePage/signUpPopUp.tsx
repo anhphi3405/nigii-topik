@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import x from '@/css/signUpPopUp.module.css';
+import x from '@/layout/homePage/signUpPopUp.module.css'
 import { Button } from 'react-bootstrap';
 import validateSignUp from '@/validator/validateSignUp';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { SignUpPopUpProps } from '../interface/signUp';
-import { registerUser, apiResponse } from '@/redux/apiRequest';
+import { SignUpPopUpProps } from '@/helper/interface/signUp';
+import { registerUser} from '@/redux/apiRequest';
 
 export default function SignUpPopUp({ isShow, onClose }: SignUpPopUpProps) {
     const [username, setUserName] = useState('');
@@ -18,13 +18,6 @@ export default function SignUpPopUp({ isShow, onClose }: SignUpPopUpProps) {
         const newUser = {username, email, password};
         if(!validateSignUp(newUser)) return;
         await registerUser({user : newUser, dispatch, navigate});
-        if(apiResponse.registerState){
-            alert("Registration Successful");
-            onClose();
-        }
-        else{
-            alert("Username or Email already exists");
-        }
     }
     return (
     <>

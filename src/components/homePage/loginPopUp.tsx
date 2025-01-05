@@ -1,39 +1,35 @@
-import React , {useState} from 'react';
+import React , {useEffect, useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import x from '@/css/loginPopUp.module.css';
+import x from '@/layout/homePage/loginPopUp.module.css'
 import SignUpPopUp from './signUpPopUp';
 import { Button } from 'react-bootstrap';
 import validateLogIn from '@/validator/validateLogin';
-import { LoginPopUpProps } from '../interface/login';
-import {loginUser, apiResponse} from '@/redux/apiRequest';
+import { LoginPopUpProps } from '@/helper/interface/login';
+import {loginUser} from '@/redux/apiRequest';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
+import { useAppSelector } from '@/redux/store'
 export default function LoginPopUp({ isShow, onClose}: LoginPopUpProps) {
   const [isDisabledSignUpPopUp, setIsDisabledSignUpPopUp] = useState(false);
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState(''); 
   const dispatch = useDispatch();
   const navigate = useNavigate();
- 
+  const success = useAppSelector((state) => state.auth.login.success);
   const showSignUpPopUp = () =>{
     onClose();
     setIsDisabledSignUpPopUp(true);  
   }
+  
+  useEffect(()=>{
+    if(success){
+      onClose();}
+  },[onClose, success])
 
   const handleLogIn = async () =>{
       const newUser = {username, password};
-      // console.log(newUser);
       if(!validateLogIn(newUser)) return;
-      await loginUser({ user: newUser, dispatch, navigate });
-      if(apiResponse.loginState) {
-        alert("Login Successful");
-        onClose();
-        window.location.reload();
-      }
-      else{
-        alert("Login Failed");
-      }
+      await loginUser({ user: newUser, dispatch, navigate});
   }
 
   return (

@@ -2,11 +2,13 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Header from "@/app//components/header"
-import Footer from './components/footer';
+import Header from "@/components/homePage/header"
+import Footer from '../components/homePage/footer';
+import { persistor } from "@/redux/store";
 import { Provider } from "react-redux";
-import store from "@/redux/store";
 import { BrowserRouter as Router } from 'react-router-dom';
+import { PersistGate } from 'redux-persist/integration/react';
+import store from "@/redux/store";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -28,11 +30,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
           <Router>
             <Header />
             {children}
             <Footer />
           </Router>
+        </PersistGate>
         </Provider>
       </body>
     </html>

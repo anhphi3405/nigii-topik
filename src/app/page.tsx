@@ -1,7 +1,7 @@
 import x from '@/layout/homePage/homePage.module.css'
 import Image from 'next/image'
-
-
+import LearningMaterial from '@/components/homePage/learningMaterial';
+import FeedBack from '@/components/homePage/feedBack';
 export default function Home() {
   const topikList = ['Topik 1', 'Topik 2', 'Topik 3', 'Topik 4', 'Topik 5', 'Topik 6'];
   const features =[
@@ -22,8 +22,16 @@ export default function Home() {
 
   return (
     <div className={x['homePage']}> 
-        <div className={x['banner']}>
-          
+
+        <div className={x['container']}>
+          <div className={x['wrapper']}>
+          <img src="https://topik.migii.net/images/banner/TOPIK%20_%20EN1.webp" alt='' />
+          <img src="https://topik.migii.net/images/banner/TOPIK%202_EN.webp" alt=''  />
+          <img src="https://topik.migii.net/images/banner/TOPIK%20_%20EN1.webp" alt='' />
+          <img src="https://topik.migii.net/images/banner/TOPIK%202_EN.webp" alt=''  />
+
+
+          </div>
         </div>
         <h1 className={x['learningPathH1']}>Migii: Your 3-month fast track to language mastery!</h1>
         <div className={x['topikList']}>
@@ -46,6 +54,11 @@ export default function Home() {
               </div> 
             ))}
         </div>
+        <button className={x['startExperience']}>
+          Experience Now!
+        </button>
+        <LearningMaterial/>
+        <FeedBack/>
     </div >
   );
 }

@@ -6,9 +6,22 @@ import { useAppSelector } from '@/redux/store';
 import User from '@/helper/interface/user';
 import x from '@/layout/homePage/header.module.css'
 import Link from 'next/link';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { logOut } from '@/redux/apiRequest';
+import ConfigAxios from '@/helper/config/configAxios';
 export default function Header() {
   const [isDiableLoginPopUp, setIsDiableLoginPopUp] = useState(false);
   const user = useAppSelector((state) => state.auth.login.currentUser) as User | null;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const accessToken = user?.accessToken as string;
+  const id = user?._id as string;
+  const axiosJWT = ConfigAxios.ConfigJWT();
+  const handleLogOut = async () => {
+    await logOut({ dispatch, navigate, id, accessToken , axiosJWT});
+  }
+  console.log(user);
   return (
     <div className={x['header']}>
         <Image
@@ -36,7 +49,9 @@ export default function Header() {
         {user? (
             <div className={x['user-info']}>
                 <h3 className={x['hello-user']}>{"Hi, " + user.username}</h3>
-                <button className={x['logout-btn']}>Logout</button>
+                <button className={x['logout-btn']}
+                onClick={()=> handleLogOut()}
+                >Logout</button>
             </div>
         ): null}
       <LoginPopUp isShow={isDiableLoginPopUp} onClose={() => setIsDiableLoginPopUp(false)} />

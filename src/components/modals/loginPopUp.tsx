@@ -1,4 +1,4 @@
-import React , {useEffect, useState} from 'react';
+import React , {  useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import x from '@/layout/homePage/loginPopUp.module.css'
 import SignUpPopUp from './signUpPopUp';
@@ -8,28 +8,26 @@ import { LoginPopUpProps } from '@/helper/interface/login';
 import {loginUser} from '@/redux/apiRequest';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '@/redux/store'
 export default function LoginPopUp({ isShow, onClose}: LoginPopUpProps) {
   const [isDisabledSignUpPopUp, setIsDisabledSignUpPopUp] = useState(false);
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState(''); 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const success = useAppSelector((state) => state.auth.login.success);
   const showSignUpPopUp = () =>{
     onClose();
     setIsDisabledSignUpPopUp(true);  
   }
-  
-  useEffect(()=>{
-    if(success){
-      onClose();}
-  },[onClose, success])
+
+
 
   const handleLogIn = async () =>{
       const newUser = {username, password};
       if(!validateLogIn(newUser)) return;
       await loginUser({ user: newUser, dispatch, navigate});
+      if(newUser) {
+        onClose();
+      }
   }
 
   return (

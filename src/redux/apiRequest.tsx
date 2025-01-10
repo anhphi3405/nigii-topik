@@ -1,8 +1,10 @@
 import axios from "axios";
-import { loginStart, loginSuccess, loginFailure , registerStart, registerSuccess, registerFailure} from "./authSlice";
+import { loginStart, loginSuccess, loginFailure , registerStart, registerSuccess, registerFailure
+, logoutStart, logoutSuccess, logoutFailure
+} from "./authSlice";
 import { LoginApiRequestProps } from "@/helper/interface/login"
 import { RegisterApiRequestProps } from "@/helper/interface/signUp"
-
+import { LogoutApiRequestProps } from "@/helper/interface/logout";
 const loginUser = async ({user, dispatch, navigate} : LoginApiRequestProps) =>{
     dispatch(loginStart());
     try{
@@ -31,6 +33,22 @@ const registerUser = async ({user, dispatch, navigate} : RegisterApiRequestProps
 }
 
 
+const logOut = async ({dispatch, navigate,id, accessToken, axiosJWT} : LogoutApiRequestProps) =>{
+    dispatch(logoutStart());
+    try{
+        await axiosJWT.post("http://localhost:5000/v1/auth/logout", id, {
+            headers :{
+                token : `Bearer ${accessToken}`
+            }
+        });
+        dispatch(logoutSuccess());
+        navigate("/");
+    }
+    catch(err){
+        alert("The backend service is not available. Please try again later");
+        dispatch(logoutFailure());
+        console.log(err);
+    }
+}
 
-
-export {loginUser, registerUser}; ;
+export {loginUser, registerUser, logOut}; ;

@@ -3,16 +3,54 @@
     width: 100vw;
     font-family: Arial, Helvetica, sans-serif;
     margin-top: 0px;
+    overflow: hidden;
 }
 
-.banner{
-    height: 55vh;
+.container{
+    width: 100vw;
+    overflow: hidden;
+    height: 460px;
+}
+.wrapper{
+    display: flex;
     width: 100%;
-    background-image: url('https://topik.migii.net/images/banner/TOPIK%20_%20EN1.webp');
-    background-size: cover;
-    background-position: center;
+    animation: slide 16s infinite;
 }
 
+.wrapper img{
+    width: 100%;
+}
+
+@keyframes slide{
+    0%{
+        transform: translateX(0);
+    }
+    20%{
+        transform: translateX(0);
+    }
+    25%{
+        transform: translateX(-100%);
+    }
+    45%{
+        transform: translateX(-100%);
+    }
+    50%{
+        transform: translateX(-200%);
+    }
+    70%{
+        transform: translateX(-200%);
+    }
+    75%{
+        transform: translateX(-300%);
+    }
+    95%{
+        transform: translateX(-300%);
+    }
+    100%{
+        transform: translateX(-300%);
+    }
+}
+  
 .learningPathH1{
     text-align: center;
     font-size: 28px;
@@ -72,4 +110,16 @@
     margin-right: 40px;
 }
 
+
+.startExperience{
+    border: none;
+    outline: none;
+    width: 200px;
+    height: 60px;
+    border-radius: 15px;
+    background-color: #18c03f;
+    text-align: center;
+    margin: 20px 42%;
+    color: white;
+}
 

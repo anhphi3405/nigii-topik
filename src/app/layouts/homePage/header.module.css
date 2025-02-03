@@ -1,0 +1,32 @@
+.container {
+    display: grid;
+    grid-template-columns: 1fr 4fr; /* Cột 1: logo (auto), Cột 2: user (chiếm phần còn lại) */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    border-bottom: 1px solid #ccc; /* Ví dụ */
+    height: 80px;
+    margin-bottom: 70px;
+  }
+  
+  .logo {
+    padding-left: calc(50% - 50px); /* Căn logo về giữa */
+  }
+  
+  .user {
+    display: flex;
+    justify-content: flex-end; /* Căn các nút về phía bên phải */
+    gap: 10px; /* Tạo khoảng cách giữa các nút */
+    margin-right: 80px;
+  }
+
+  .user button {
+    border: none;
+    outline: none;
+    background-color: white;
+  }
+
+  @media screen and (max-width: 768px) {
+    .user{
+      margin-right: 0px;
+    }
+      
+  }

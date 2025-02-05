@@ -4,6 +4,7 @@
     grid-template-rows: 1fr 1fr;
     gap: 20px 20px;
     height: 700px;
+    margin-top: 70px;
 }
 
 .grid-item1{
@@ -54,6 +55,10 @@
     margin-left: calc(50% - 77.5px);
     background-color: blue;
     color: white;
+    list-style: none;
+    text-decoration: none;
+    font-size: 18px;
+    text-align: center;
 }
 .view, .lecture, .community{
     border: none;
@@ -80,6 +85,9 @@
         padding-left: 0;
     }
     .grid-item4{
+        padding-right: 0;
+    }
+    .grid-item2{
         padding-right: 0;
     }
     

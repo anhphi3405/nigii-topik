@@ -17,10 +17,7 @@
 }
 @media screen and (max-width: 768px) {
     .footer{
-        display: flex;
-        flex-direction: column;
-        margin-top: calc(70vh);
-        
+        transform: translateY(120vh);
     }
     
 }

@@ -1,6 +1,13 @@
+'use client'
 import React from 'react'
 import x from '@/app/layouts/homePage/homePage.module.css'
+import { useRouter } from 'next/navigation';
+
 export default function Page() {
+  const router = useRouter();
+  const start = ()=>{
+    router.push("/practice/topik-i/listening");
+  }
   return (
     <div className={x['container']}>
       <div className={x['grid-item1']}>
@@ -38,7 +45,7 @@ export default function Page() {
             <div className={x['to-solve']}>
               <h3 style={{fontSize : '18px', textAlign : "center"}}>to solve</h3>
               <h2 style={{fontSize : '24px', textAlign : 'center'}}>560</h2>
-              <button className={x['start']}>Start</button>
+              <button onClick={start} className={x['start']}>Start</button>
             </div>
             <div style={{display : 'flex', flexDirection : 'column', paddingTop : '10px'}}>
               <h5 style={{fontSize : '18px', textAlign : "center"}}>solved</h5>

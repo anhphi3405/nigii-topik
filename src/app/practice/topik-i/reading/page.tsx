@@ -1,11 +1,11 @@
 'use client'
 import React from 'react'
-import x from "@/layouts/topik-i/listening.module.css"
+import x from "@/layouts/topik-i/reading.module.css"
 import { useRouter } from 'next/navigation'
-export default function Listening() {
+export default function Reading() {
     const router = useRouter();
-    const reading= ()=>{
-        router.replace("reading");
+    const listening = ()=>{
+        router.replace("listening");
     }
   return (
     <div className={x['container']}>
@@ -16,19 +16,21 @@ export default function Listening() {
             <h3 style={{fontSize : '18px'}}>TOPIK I</h3>
             </div>
             <div style={{display : 'flex', gap : '20px', alignItems : 'center'}}> 
-                <button style={{border : 'none', outline : 'none', backgroundColor : 'orange', 
+                <button onClick={listening} 
+                style={{border : 'none', outline : 'none', backgroundColor : 'orange', 
                     borderRadius : '15px', width : '100px', height : '30px', color : "white"
                 }}>Listening</button>
-                <button  onClick={reading}
-                style={{border : 'none', outline : 'none', backgroundColor : 'green', 
+                <button style={{border : 'none', outline : 'none', backgroundColor : 'green', 
                     borderRadius : '15px', width : '100px', height : '30px', color : "white"
                 }}>Reading</button>
             </div>
         </div>
         <div className={x['part']}>
-            <div className={x['part-item1']}>
+            <div className={x['part-item1']}
+            onClick={()=>{
+                window.location.href = "/practice/detail/67a46837f14a2d1f92688ca2";}}>
                 <div style={{display : 'flex', alignItems : 'center'}}>
-                    <h1 style={{fontSize : '24px'}}>Part 1 - Correct answer</h1>
+                    <h1 style={{fontSize : '24px'}}>Part 1 - Sentence topic</h1>
                 </div>
                 <div style={{display : 'flex', alignItems : 'center'}}>
                     <h3 style={{fontSize : '18px', fontWeight : 'normal'}}>Correct</h3>
@@ -115,19 +117,7 @@ export default function Listening() {
                     <div className={x['solid']}></div>
                 </div>
             </div>
-            <div className={x['part-item1']}>
-                <div style={{display : 'flex', alignItems : 'center',  justifyContent : 'space-between'}}>
-                    <h1 style={{fontSize : '24px'}}>Part 8 - Short conversation</h1>
-                    <span style={{marginRight : '10px'}}><i className="fa-solid fa-lock" style={{color : 'blue'}}></i></span>
-                </div>
-                <div style={{display : 'flex', alignItems : 'center'}}>
-                    <h3 style={{fontSize : '18px', fontWeight : 'normal'}}>Correct</h3>
-                </div>
-                <div style={{display : 'flex', alignItems : 'center'}}>
-                    <h3 style={{fontSize : '18px', fontWeight : 'normal'}}>Correct ratio</h3>
-                    <div className={x['solid']}></div>
-                </div>
-            </div>
+            
 
         </div>
     </div>

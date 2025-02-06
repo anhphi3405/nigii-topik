@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import x from '@/app/layouts/homePage/homePage.module.css'
+import x from '@/layouts/homePage/homePage.module.css'
 import { useRouter } from 'next/navigation';
 
 export default function Page() {

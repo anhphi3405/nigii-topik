@@ -1,11 +1,11 @@
 import React from 'react'
-import x from '@/app/layouts/homePage/header.module.css'
+import x from '@/layouts/homePage/header.module.css'
 import Link from 'next/link'
-import { useAppSelector } from '@/app/redux/store'
+import { useAppSelector } from '@/redux/store'
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { logOut } from '@/app/redux/apiRequest';
-import ConfigAxios from '@/app/helper/config/configAxios';
+import { logOut } from '@/redux/apiRequest';
+import ConfigAxios from '@/helper/config/configAxios';
 
 interface User {
   accessToken: string;

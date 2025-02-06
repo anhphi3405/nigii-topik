@@ -1,8 +1,8 @@
 
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { loginSuccess } from "@/app/redux/authSlice"
-import { useAppSelector } from '@/app/redux/store';
+import { loginSuccess } from "@/redux/authSlice"
+import { useAppSelector } from '@/redux/store';
 import {jwtDecode} from 'jwt-decode';
 interface User  {
   accessToken: string;

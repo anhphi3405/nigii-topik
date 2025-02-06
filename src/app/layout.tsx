@@ -2,10 +2,10 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Header from "./components/homePage/header";
-import Footer from "./components/homePage/footer";
-import {persistor} from "@/app/redux/store"
-import store from "@/app/redux/store";
+import Header from "@/components/homePage/header";
+import Footer from "@/components/homePage/footer";
+import {persistor} from "@/redux/store"
+import store from "@/redux/store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { BrowserRouter as Router } from 'react-router-dom';

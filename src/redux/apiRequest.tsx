@@ -3,6 +3,8 @@ import { loginStart, loginSuccess, loginFailure , registerStart, registerSuccess
 , logoutStart, logoutSuccess, logoutFailure
 } from "./authSlice";
 
+import { fetchStart, fetchSuccess, fetchFailure } from "./examSlice";
+
 const loginUser = async ({user, dispatch}) =>{
     dispatch(loginStart());
     try{
@@ -51,4 +53,16 @@ const logOut = async ({dispatch, navigate,id, accessToken, axiosJWT} ) =>{
     }
 }
 
-export {loginUser, registerUser, logOut}; ;
+const fetchExams = async ({dispatch, axiosJWT, id}) =>{
+    dispatch(fetchStart());
+    try{
+        const res = await axiosJWT.get(`http://localhost:5000/v1/exam/${id}`);
+        dispatch(fetchSuccess(res.data));
+    }
+    catch(err){
+        dispatch(fetchFailure());
+        console.log(err);
+    }
+}
+
+export {loginUser, registerUser, logOut, fetchExams}; ;

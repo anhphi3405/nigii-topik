@@ -1,9 +1,9 @@
 'use client'
 import React, {useState} from 'react'
-import x from "@/app/layouts/login/login.module.css"
+import x from "@/layouts/login/login.module.css"
 import Link from 'next/link'
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../redux/apiRequest';
+import { loginUser } from '@/redux/apiRequest';
 export default function Login() {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");

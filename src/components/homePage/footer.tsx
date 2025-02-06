@@ -1,5 +1,5 @@
 import React from 'react'
-import x from '@/app/layouts/homePage/footer.module.css'
+import x from '@/layouts/homePage/footer.module.css'
 export default function Footer() {
   return (
     <div className={x['footer']}>

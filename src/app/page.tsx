@@ -30,7 +30,7 @@ export default function Page() {
       </div>
       <div className={x['grid-item2']}>
           <div className={x['youtube']}>
-          <iframe width="100%" height="100%" src="https://www.youtube.com/embed/ZmKy_fnRM_E?si=RA4_3EMAw5_8spBa" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+          <iframe width="100%" height="100%" src="https://www.youtube.com/embed/WBl31Pyr_M8?si=GwM2k60mCW9scrZm" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
           </div>
       </div>
       <div className={x['grid-item3']}>

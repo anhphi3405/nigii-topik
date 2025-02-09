@@ -4,6 +4,7 @@ import { loginStart, loginSuccess, loginFailure , registerStart, registerSuccess
 } from "./authSlice";
 
 import { fetchStart, fetchSuccess, fetchFailure } from "./examSlice";
+import { fetchQuestionsStart, fetchQuestionsSuccess, fetchQuestionsFailure } from "./questionsSlice";
 
 const loginUser = async ({user, dispatch}) =>{
     dispatch(loginStart());
@@ -65,4 +66,16 @@ const fetchExams = async ({dispatch, axiosJWT, id}) =>{
     }
 }
 
-export {loginUser, registerUser, logOut, fetchExams}; ;
+const fetchQuestions = async({dispatch, axiosJWT, id}) => {
+    dispatch(fetchQuestionsStart());
+    try{
+        const res = await axiosJWT.get(`http://localhost:5000/v1/exam/${id}/questions`);
+        dispatch(fetchQuestionsSuccess(res.data));
+    }
+    catch(err){
+        dispatch(fetchQuestionsFailure());
+        console.log(err);
+    }
+}
+
+export {loginUser, registerUser, logOut, fetchExams, fetchQuestions}; ;

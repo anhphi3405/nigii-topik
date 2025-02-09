@@ -2,6 +2,7 @@
 import {combineReducers, configureStore} from '@reduxjs/toolkit';
 import authReducer from './authSlice';
 import examReducer from './examSlice';
+import questionsReducer from './questionsSlice';
 import { useDispatch, TypedUseSelectorHook, useSelector } from 'react-redux';
 import {
     persistStore,
@@ -20,7 +21,7 @@ import {
     version: 1,
     storage,
   }
-  const rootReducer = combineReducers({auth : authReducer, exam : examReducer})
+  const rootReducer = combineReducers({auth : authReducer, exam : examReducer, questions : questionsReducer});
   const persistedReducer = persistReducer(persistConfig, rootReducer)
 
   const store = configureStore({

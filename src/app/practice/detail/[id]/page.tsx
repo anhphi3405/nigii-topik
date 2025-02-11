@@ -21,50 +21,52 @@ export default function Page() {
     fetchQuestions({ dispatch,axiosJWT,id}) ;
   }, [])
   const questions = useAppSelector((state) => state.questions.fetchQuestions.questions) as question[] | null;
-  const [done, setDone] = useState(1);
+  const [done, setDone] = useState(0);
   const [isExplaining, setIsExplaining] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState(questions ? questions[done - 1] : null);
-  const [state_option, setOption] = useState<string[]>(Array(4).fill(''));
+  const [currentQuestion, setCurrentQuestion] = useState(questions ? questions[done] : null);
+  const [options, setOptions] = useState<number[]>([1, 2, 3, 4]);
+  const create2Darray = (rows: number, cols: number, defaultValue: string): string[][] => {
+    const arr = [];
+    for (let i = 0; i < rows; i++) {
+      arr.push([]);
+      for (let j = 0; j < cols; j++) {
+        arr[i].push(defaultValue);
+      }
+    }
+    return arr;
+  }
+  const [answers, setAnswer] = useState<number[]>(Array(questions?.length as number).fill(0));
+  const [optionColor, setOptionColor] = useState<string[][]>(create2Darray(questions?.length as number, 4, ''));
   const next = () =>{
-    setDone(Math.min(done + 1, questions?.length || 1));
-    setCurrentQuestion(questions ? questions[done] : null);
-    const newOption = [...state_option];
-    newOption.fill('');
-    setOption(newOption);
+    setDone(Math.min(done + 1, questions?.length as number - 1));
+    setCurrentQuestion(questions ? questions[done + 1] : null);
   }
   const prev = () =>{
-    setDone(Math.max(done - 1, 1));
-    setCurrentQuestion(questions ? questions[done - 2] : null);
-    const newOption = [...state_option];
-    newOption.fill('');
-    if(choosens[done - 2] != questions![done - 2].correct_option){
-      newOption[choosens[done - 2] - 1] = 'red';
-    }
-    newOption[questions![done - 2].correct_option - 1] = 'green';
-    setOption(newOption);
+    setDone(Math.max(done - 1, 0));
+    setCurrentQuestion(questions ? questions[done - 1] : null);
   }
-  const[choosens, setChoosens] = useState<number[]>(Array(questions?.length).fill(0));
+
   const answer = async (option : number) =>{
-    if(choosens[done - 1] !== 0) return;
-    const newChoosens = [...choosens];
-    newChoosens[done - 1] = option;
-    setChoosens(newChoosens);
-    const newOption = [...state_option];
+    if(answers[done]!=0) return;
+    const newAnswers = [...answers];
+    newAnswers[done] = option;
+    setAnswer(newAnswers);
+    const newOptionColor = [...optionColor];
+    if(option != currentQuestion?.correct_option){
+      newOptionColor[done][option - 1] = 'red';
+    }
     if (currentQuestion) {
-      newOption[currentQuestion.correct_option - 1] = 'green';
+      newOptionColor[done][currentQuestion.correct_option - 1] = 'green';
     }
-    if(option !== currentQuestion?.correct_option){
-      newOption[option - 1] = 'red';
-    }
-    setOption(newOption);
+    setOptionColor(newOptionColor);
   }
-  console.log(choosens[done-1] + " " + currentQuestion?.correct_option);
+  console.log(questions)
   return (
     <div className={x['container']}>
       <div className={x['question']} style={{paddingBottom : isExplaining ? '30%' : '40%'}}>
         <div className={x['head']}>
-          <span style={{fontSize : "18px"}}> {done} </span> <span style={{fontSize : "18px", marginRight : '20px'}}>/15</span>
-          <div style={{display : "grid", gridTemplateColumns : `${done}fr ${15 - done}fr`,width : "100%", height : '10px', boxShadow : '0 0 5px 0px #000'}}>
+          <span style={{fontSize : "18px"}}> {done + 1} </span> <span style={{fontSize : "18px", marginRight : '20px'}}>/15</span>
+          <div style={{display : "grid", gridTemplateColumns : `${done + 1}fr ${15 - done -1 }fr`,width : "100%", height : '10px', boxShadow : '0 0 5px 0px #000'}}>
             <div style={{backgroundColor : 'orange'}}></div>
             <div></div>
           </div>
@@ -72,7 +74,7 @@ export default function Page() {
         <div className={x['content']}>
           <div className={x['no-explain']}>
             <div style={{display : 'flex', alignItems : 'center', justifyContent : 'space-between'}}>
-              <span style={{ fontSize : '18px'}}>Question {done}</span> 
+              <span style={{ fontSize : '18px'}}>Question {done + 1}</span> 
               <span><i className="fa-solid fa-bug" style={{fontSize : "30px", marginRight : '15px'}}></i></span>
             </div>
             <div>
@@ -83,24 +85,14 @@ export default function Page() {
               <span style={{marginLeft : '90px', fontSize : '18px', fontWeight : 'normal'}}> 4 : {currentQuestion?.options[3]} </span> <br />
             </div>
             <div style={{display : 'flex', alignItems : 'center', gap : '40px'}}>
-                <div className={x['answer']}>
-                  <h5 style={{textAlign : 'end'}}>1</h5>
-                  <button className={x['option']} style={{backgroundColor : `${state_option[0]}`}} onClick={() => {
-                    answer(1);
-                  }}></button>
-                </div>
-                <div className={x['answer']}>
-                  <h5 style={{textAlign : 'end'}}>2</h5>
-                  <button className={x['option']} style={{backgroundColor :  `${state_option[1]}`}} onClick={() => answer(2)}></button>
-                </div>
-                <div className={x['answer']}>
-                  <h5 style={{textAlign : 'end'}}>3</h5>
-                  <button className={x['option']} style={{backgroundColor : `${state_option[2]}`}} onClick={() => answer(3)}></button>
-                </div>
-                <div className={x['answer']}>
-                  <h5 style={{textAlign : 'end'}}>4</h5>
-                  <button className={x['option']} style={{backgroundColor : `${state_option[3]}`}} onClick={() => answer(4)}></button>
-                </div>
+                {options.map((option, index) => (
+                  <div key={index} className={x['answer']}>
+                    <h5 style={{textAlign : 'end'}}>{option}</h5>
+                    <button className={x['option']} style={{backgroundColor : `${optionColor[done][option -1 ]}`}} onClick={() => {
+                      answer(option);
+                    }}></button>
+                    </div>
+                ))}
             </div>
             <div style={{display : 'grid', paddingLeft : '20px'}}>
             <button className = {x['explain-btn']} onClick={()=> setIsExplaining(true)}
@@ -118,7 +110,7 @@ export default function Page() {
           }
         </div>
           <div style={{display : 'flex', justifyContent : 'flex-end', paddingRight : '33px', gap : '15px'}} >
-            {done > 1 ? (
+            {done > 0 ? (
               <button className={x['next']} onClick={prev}>
               <span><i className="fa-solid fa-chevron-left"></i></span> Previous</button>
             ) : null}
@@ -132,10 +124,10 @@ export default function Page() {
             {questions?.map((question, index) => (
               <div key={index} className={x['overview-option']}>
                   <span>( {index + 1} )</span>
-                  <button className={x['option']}>1</button>
-                  <button className={x['option']}>2</button>
-                  <button className={x['option']}>3</button>
-                  <button className={x['option']}>4</button>
+                  <button className={x['option']} style={{backgroundColor :  `${optionColor[index][0]}`  }} >1</button>
+                  <button className={x['option']} style={{backgroundColor :  `${optionColor[index][1]}`  }}>2</button>
+                  <button className={x['option']} style={{backgroundColor :  `${optionColor[index][2]}`  }}>3</button>
+                  <button className={x['option']} style={{backgroundColor :  `${optionColor[index][3]}`  }}>4</button>
               </div>
             ))}
           </div>

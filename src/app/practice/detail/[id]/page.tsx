@@ -41,6 +41,7 @@ export default function Page() {
   const [submited, setSubmited] = useState(false);
   const [score, setScore] = useState(0);
   const startTime = useRef(Date.now());
+  const [retake, setRetake] = useState(false);
   const next = () =>{
     setDone(Math.min(done + 1, questions?.length as number - 1));
     setCurrentQuestion(questions ? questions[done + 1] : null);
@@ -53,7 +54,7 @@ export default function Page() {
   const answer = (option : number, prevOption : number, index : number) =>{
     setDone(index);
     setCurrentQuestion(questions ? questions[index] : null);
-    if(showAnswer[index]) return;
+    if(showAnswer[index] || retake) return;
     const newAnswers = [...answers];
     newAnswers[index] = option;
     setAnswer(newAnswers);
@@ -123,7 +124,7 @@ export default function Page() {
                 {options.map((option, index) => (
                   <div key={index} className={x['answer']}>
                     <h5 style={{textAlign : 'end'}}>{option}</h5>
-                    <button className={x['option']} style={{backgroundColor : `${optionColor[done][option -1 ]}`}} onClick={() => {
+                    <button className={x['option']} style={{backgroundColor : `${optionColor[done]?.[index ] || ''}`}} onClick={() => {
                       answer(option, answers[done], done);
                     }}></button>
                     </div>
@@ -174,7 +175,14 @@ export default function Page() {
           </div>
         </div>
         <div style={{display : 'flex', justifyContent : 'center'}}>
-          <button className={x['submit']} onClick={submit}>Submit</button>
+          {retake ? (
+            <button className={x['submit']} onClick={() => window.location.reload()}>Continue</button>
+          )  : (
+            <button className={x['submit']} onClick={() =>{
+              submit();
+              setRetake(true);
+            }}>Submit</button>
+          )}
         </div>
       </div>
       {submited  ? (
@@ -199,14 +207,14 @@ export default function Page() {
                   <div style={{display : 'flex', flexDirection : 'row', flexWrap : 'wrap', gap : '10px' , padding : '0 20px'}}>
                     {questions?.map((question, index) => (
                       <div key={index}>
-                          <button className={x['result-btn']} style={{backgroundColor : (answers[index] == question.correct_option) ? 'green' : 'red'}}>
+                          <button className={x['result-btn']} style={{backgroundColor : (answers[index] == question.correct_option) ? 'green' : 'red'}} onClick={() => setSubmited(false)}>
                           {index + 1}
                           </button>
                       </div>
                     ))}
                   </div>
                   <div style={{display : 'flex', justifyContent : 'center', alignItems : 'center'}}>
-                    <button className={x['detail']}>Detail</button>
+                    <button className={x['detail']} onClick={() => setSubmited(false)}>Detail</button>
                   </div>
                 </div>
             </div>

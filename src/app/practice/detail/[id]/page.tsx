@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'next/navigation';
 import {fetchQuestions} from '@/redux/apiRequest';
 import ConfigAxios from '@/helper/config/configAxios';
@@ -24,7 +24,7 @@ export default function Page() {
   const [done, setDone] = useState(0);
   const [isExplaining, setIsExplaining] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(questions ? questions[done] : null);
-  const [options, setOptions] = useState<number[]>([1, 2, 3, 4]);
+  const [options] = useState<number[]>([1, 2, 3, 4]);
   const create2Darray = (rows: number, cols: number, defaultValue: string): string[][] => {
     const arr = [];
     for (let i = 0; i < rows; i++) {
@@ -37,6 +37,10 @@ export default function Page() {
   }
   const [answers, setAnswer] = useState<number[]>(Array(questions?.length as number).fill(0));
   const [optionColor, setOptionColor] = useState<string[][]>(create2Darray(questions?.length as number, 4, ''));
+  const [showAnswer, setShowAnswer] = useState<boolean[]>(Array(questions?.length as number).fill(false));
+  const [submited, setSubmited] = useState(false);
+  const [score, setScore] = useState(0);
+  const startTime = useRef(Date.now());
   const next = () =>{
     setDone(Math.min(done + 1, questions?.length as number - 1));
     setCurrentQuestion(questions ? questions[done + 1] : null);
@@ -46,21 +50,52 @@ export default function Page() {
     setCurrentQuestion(questions ? questions[done - 1] : null);
   }
 
-  const answer = async (option : number) =>{
-    if(answers[done]!=0) return;
+  const answer = (option : number, prevOption : number, index : number) =>{
+    setDone(index);
+    setCurrentQuestion(questions ? questions[index] : null);
+    if(showAnswer[index]) return;
     const newAnswers = [...answers];
-    newAnswers[done] = option;
+    newAnswers[index] = option;
     setAnswer(newAnswers);
     const newOptionColor = [...optionColor];
-    if(option != currentQuestion?.correct_option){
-      newOptionColor[done][option - 1] = 'red';
+    newOptionColor[index][option - 1] = 'orange';
+    if(prevOption){
+      newOptionColor[index][prevOption - 1] = '';
+    }
+    setOptionColor(newOptionColor);
+  }
+
+  const displayAnswer = () =>{
+    const newOptionColor = [...optionColor];
+  if(answers[done] != currentQuestion?.correct_option && answers[done] != 0){
+      newOptionColor[done][answers[done] -1 ] = 'red';
     }
     if (currentQuestion) {
       newOptionColor[done][currentQuestion.correct_option - 1] = 'green';
     }
     setOptionColor(newOptionColor);
+    const newShowAnswer = [...showAnswer];
+    newShowAnswer[done] = true;
+    setShowAnswer(newShowAnswer);
   }
-  console.log(questions)
+  const submit = () =>{
+    setSubmited(true);
+    let newScore = 0;
+    answers.forEach((answer, index) => {
+      if(answer == questions![index].correct_option){
+        newScore++;
+      }
+    })
+    setScore(newScore);
+  }
+  const convertTime = (time : number) =>{
+    const totalSeconds = time / 1000;
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = Math.floor(totalSeconds % 60);
+    const minutesString = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    const secondsString = seconds < 10 ? `0${seconds}` : `${seconds}`;
+    return `${minutesString}:${secondsString}`;
+  }
   return (
     <div className={x['container']}>
       <div className={x['question']} style={{paddingBottom : isExplaining ? '30%' : '40%'}}>
@@ -89,14 +124,15 @@ export default function Page() {
                   <div key={index} className={x['answer']}>
                     <h5 style={{textAlign : 'end'}}>{option}</h5>
                     <button className={x['option']} style={{backgroundColor : `${optionColor[done][option -1 ]}`}} onClick={() => {
-                      answer(option);
+                      answer(option, answers[done], done);
                     }}></button>
                     </div>
                 ))}
             </div>
-            <div style={{display : 'grid', paddingLeft : '20px'}}>
+            <div style={{display : 'flex', paddingLeft : '20px', gap : '20px'}} >
             <button className = {x['explain-btn']} onClick={()=> setIsExplaining(true)}
               style={{backgroundColor : isExplaining ? 'red' : 'green'}}>Explain</button>
+              <button className={x['show-btn']} onClick={displayAnswer}>Show answer</button>
             </div>
           </div>
           {
@@ -124,18 +160,58 @@ export default function Page() {
             {questions?.map((question, index) => (
               <div key={index} className={x['overview-option']}>
                   <span>( {index + 1} )</span>
-                  <button className={x['option']} style={{backgroundColor :  `${optionColor[index][0]}`  }} >1</button>
-                  <button className={x['option']} style={{backgroundColor :  `${optionColor[index][1]}`  }}>2</button>
-                  <button className={x['option']} style={{backgroundColor :  `${optionColor[index][2]}`  }}>3</button>
-                  <button className={x['option']} style={{backgroundColor :  `${optionColor[index][3]}`  }}>4</button>
+                  <button className={x['option']} style={{backgroundColor :  `${optionColor[index][0]}`  }} onClick={() => answer(1, answers[index], index)} >1</button>
+                  <button className={x['option']} style={{backgroundColor :  `${optionColor[index][1]}`  }}
+                  onClick={() => answer(2, answers[index], index)}
+                  >2</button>
+                  <button className={x['option']} style={{backgroundColor :  `${optionColor[index][2]}`  }}
+                  onClick={() => answer(3, answers[index], index)}
+                  >3</button>
+                  <button className={x['option']} style={{backgroundColor :  `${optionColor[index][3]}`  }}
+                  onClick={() => answer(4, answers[index], index)}>4</button>
               </div>
             ))}
           </div>
         </div>
         <div style={{display : 'flex', justifyContent : 'center'}}>
-          <button className={x['submit']}>Submit</button>
+          <button className={x['submit']} onClick={submit}>Submit</button>
         </div>
       </div>
+      {submited  ? (
+        <div className={x['result']}>
+            <div className={x['result-content']}>
+                <div style={{display : 'grid', gridTemplateRows : '1fr 1fr 1fr', height : '369px', borderRadius : '20px', backgroundColor : 'white', gap : '20px'}}>
+                  <div style={{display : 'grid', gridTemplateColumns : '1fr 3fr'}}>
+                    <div style={{display : 'flex', justifyContent : 'center', alignItems : 'center'}}> 
+                      <img style={{width : '100px', height : "100px"}} src="https://topik.migii.net/images/migii/9.webp" alt="" />
+                    </div>
+                    <div style={{display : 'grid', gridTemplateRows : '1fr 1fr'}}>
+                      <div style={{display :'flex', flexDirection : 'row', justifyContent : 'space-between', alignItems : 'center', padding : '0 20px'}}>
+                        <h3 style={{fontSize : '18px', fontWeight : 'bold'}}>Result: {score}/{questions?.length}</h3>
+                        <div style={{width : '60px', height : "28px", borderRadius : '10px', backgroundColor : 'red', color : 'white', textAlign : 'center'}}> {(score * 100 / (questions?.length || 1)).toFixed(2)} % </div>
+                      </div>
+                      <div style={{display :'flex', flexDirection : 'row', justifyContent : 'space-between', alignItems : 'flex-start', padding : '0 20px'}}>
+                          <h3 style={{fontSize : '18px', fontWeight : 'bold'}}>Total time to do the practice</h3>
+                          <div style={{width : '60px', height : "28px", borderRadius : '10px', backgroundColor : 'green', color : 'white', textAlign : 'center'}}> {convertTime(Date.now() - startTime.current)} </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{display : 'flex', flexDirection : 'row', flexWrap : 'wrap', gap : '10px' , padding : '0 20px'}}>
+                    {questions?.map((question, index) => (
+                      <div key={index}>
+                          <button className={x['result-btn']} style={{backgroundColor : (answers[index] == question.correct_option) ? 'green' : 'red'}}>
+                          {index + 1}
+                          </button>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{display : 'flex', justifyContent : 'center', alignItems : 'center'}}>
+                    <button className={x['detail']}>Detail</button>
+                  </div>
+                </div>
+            </div>
+        </div>
+      )  : null}
     </div>
   )
 }

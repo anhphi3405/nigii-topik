@@ -2,7 +2,6 @@
 import React from 'react'
 import x from '@/layouts/homePage/homePage.module.css'
 import { useRouter } from 'next/navigation';
-
 export default function Page() {
   const router = useRouter();
   const start = ()=>{

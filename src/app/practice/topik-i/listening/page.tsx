@@ -26,7 +26,9 @@ export default function Listening() {
             </div>
         </div>
         <div className={x['part']}>
-            <div className={x['part-item1']}>
+            <div className={x['part-item1']}
+                onClick={()=>{
+                            window.location.href = "/practice/detail/67aec9fe90f592df431787b8";}}>
                 <div style={{display : 'flex', alignItems : 'center'}}>
                     <h1 style={{fontSize : '24px'}}>Part 1 - Correct answer</h1>
                 </div>

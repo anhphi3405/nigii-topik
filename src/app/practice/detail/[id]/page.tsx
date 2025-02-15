@@ -6,12 +6,15 @@ import ConfigAxios from '@/helper/config/configAxios';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '@/redux/store';
 import x from '@/layouts/practice/detail.module.css'
+import FileDisplay from '@/components/file/fileDisplay';
 interface question {
   correct_option : number,
   explanation : string,
   options : string[],
   question_text : string
-  _id : string
+  _id : string,
+  question_audio : string,
+  question_img : [string],
 }
 export default function Page() {
   const { id } = useParams();
@@ -97,6 +100,7 @@ export default function Page() {
     const secondsString = seconds < 10 ? `0${seconds}` : `${seconds}`;
     return `${minutesString}:${secondsString}`;
   }
+  console.log(questions);
   return (
     <div className={x['container']}>
       <div className={x['question']} style={{paddingBottom : isExplaining ? '30%' : '40%'}}>
@@ -107,18 +111,35 @@ export default function Page() {
             <div></div>
           </div>
         </div>
-        <div className={x['content']}>
-          <div className={x['no-explain']}>
+        <div className={x['content']}>  
+          <div className={x['no-explain']} style={{height : currentQuestion && currentQuestion.options ? currentQuestion.options.length > 0 ? '310px' : '620px' : '890px'}}>
             <div style={{display : 'flex', alignItems : 'center', justifyContent : 'space-between'}}>
               <span style={{ fontSize : '18px'}}>Question {done + 1}</span> 
               <span><i className="fa-solid fa-bug" style={{fontSize : "30px", marginRight : '15px'}}></i></span>
             </div>
-            <div>
-              <span style={{marginLeft : '75px', fontSize : '24px'}}> {currentQuestion?.question_text} </span> <br />
-              <span style={{marginLeft : '90px', fontSize : '18px', fontWeight : 'normal'}}> 1 : {currentQuestion?.options[0]} </span> <br />
-              <span style={{marginLeft : '90px', fontSize : '18px', fontWeight : 'normal' }}>  2 : {currentQuestion?.options[1]} </span> <br />
-              <span style={{marginLeft : '90px', fontSize : '18px', fontWeight : 'normal'}}> 3 : {currentQuestion?.options[2]} </span> <br />
-              <span style={{marginLeft : '90px', fontSize : '18px', fontWeight : 'normal'}}> 4 : {currentQuestion?.options[3]} </span> <br />
+            <div style={{paddingLeft : "10%"}}>
+              <div>
+                <span style={{ fontSize : '24px'}}> {currentQuestion?.question_text} </span> <br />
+              </div>
+              <div>
+                <FileDisplay fileId={currentQuestion?.question_audio}/>
+              </div>
+            {currentQuestion && currentQuestion.options.length > 0 ? (
+                            <div>
+                            <span style={{ fontSize : '18px', fontWeight : 'normal'}}> 1 : {currentQuestion?.options[0]} </span> <br />
+                            <span style={{ fontSize : '18px', fontWeight : 'normal' }}>  2 : {currentQuestion?.options[1]} </span> <br />
+                            <span style={{ fontSize : '18px', fontWeight : 'normal'}}> 3 : {currentQuestion?.options[2]} </span> <br />
+                            <span style={{ fontSize : '18px', fontWeight : 'normal'}}> 4 : {currentQuestion?.options[3]} </span> <br />
+                            </div>
+             ) : (
+                <div style={{display : 'grid', gridTemplateColumns : '1fr 1fr', gridTemplateRows : '1fr 1fr ', gap : '20px', margin : '0 '}}>
+                  {currentQuestion?.question_img.map((img, index) => (
+                    <div key={index}>
+                      <img style={{width : '200px', height : '200px'}} src={img} alt={`Question image ${index + 1}`} />
+                    </div>
+                  ))}
+                </div>
+             )}
             </div>
             <div style={{display : 'flex', alignItems : 'center', gap : '40px'}}>
                 {options.map((option, index) => (

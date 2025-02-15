@@ -50,6 +50,7 @@ export default function Page() {
     setCurrentQuestion(questions ? questions[done + 1] : null);
   }
   const prev = () =>{
+    console.log("prev");
     setDone(Math.max(done - 1, 0));
     setCurrentQuestion(questions ? questions[done - 1] : null);
   }
@@ -103,10 +104,14 @@ export default function Page() {
   console.log(questions);
   return (
     <div className={x['container']}>
-      <div className={x['question']} style={{paddingBottom : isExplaining ? '30%' : '40%'}}>
+      <div className={x['question']}>
         <div className={x['head']}>
-          <span style={{fontSize : "18px"}}> {done + 1} </span> <span style={{fontSize : "18px", marginRight : '20px'}}>/15</span>
-          <div style={{display : "grid", gridTemplateColumns : `${done + 1}fr ${15 - done -1 }fr`,width : "100%", height : '10px', boxShadow : '0 0 5px 0px #000'}}>
+          <div style={{fontSize : "18px", display :'flex', flexWrap : 'nowrap'}}>
+          <div >  {`${done + 1}`} </div>
+          <div> / </div>
+          <div> {questions ? questions.length : 0} </div>
+          </div>
+          <div style={{display : "grid", gridTemplateColumns : `${done + 1}fr ${questions ? questions.length - done - 1 : 0}fr`,width : "100%", height : '10px', boxShadow : '0 0 5px 0px #000'}}>
             <div style={{backgroundColor : 'orange'}}></div>
             <div></div>
           </div>
@@ -135,6 +140,7 @@ export default function Page() {
                 <div style={{display : 'grid', gridTemplateColumns : '1fr 1fr', gridTemplateRows : '1fr 1fr ', gap : '20px', margin : '0 '}}>
                   {currentQuestion?.question_img.map((img, index) => (
                     <div key={index}>
+                      <span>{index + 1} </span>
                       <img style={{width : '200px', height : '200px'}} src={img} alt={`Question image ${index + 1}`} />
                     </div>
                   ))}
@@ -169,7 +175,7 @@ export default function Page() {
         </div>
           <div style={{display : 'flex', justifyContent : 'flex-end', paddingRight : '33px', gap : '15px'}} >
             {done > 0 ? (
-              <button className={x['next']} onClick={prev}>
+              <button key={done} className={x['next']} onClick={prev}>
               <span><i className="fa-solid fa-chevron-left"></i></span> Previous</button>
             ) : null}
           <button className={x['next']} onClick={next}>Next <span><i className="fa-solid fa-chevron-right"></i></span> </button>

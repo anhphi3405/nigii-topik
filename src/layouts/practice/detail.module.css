@@ -1,14 +1,14 @@
 .container{
     display: grid;
     grid-template-columns: 4fr 2fr;
-    height: 691px;
     padding-left: 10%;
     padding-right: 10%;
+    height: auto;
 }
 .question {
-    display: grid;
-    grid-template-rows: 1fr 9fr 1fr;
-    row-gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .head{
@@ -16,6 +16,7 @@
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
+    gap: 20px;
 }
 .content{
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
@@ -91,7 +92,7 @@
     display: grid;
     padding-left: 20px;
     padding-right: 20px;    
-    grid-template-rows: 8fr 2fr;
+    grid-template-rows: 1fr 1fr;
 }
 
 .overview-options{

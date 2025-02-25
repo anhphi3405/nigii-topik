@@ -30,7 +30,6 @@
     padding-left: 30px;
     padding-right: 30px;
     font-weight: bold;
-    height: 310px;
 }
 .option{
     border: 1px solid #18f20c;
@@ -99,9 +98,8 @@
     border: solid 1px #18f20c;
     border-radius: 10px;
     max-height: 610px;
-    overflow: auto;
     width:  100%;
-    height: 100%;
+    overflow: scroll;
 }
 
 /* Tùy chỉnh thanh cuộn ngang và dọc */

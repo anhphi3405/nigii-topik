@@ -1,0 +1,38 @@
+.container{
+    display: grid;
+    grid-template-columns : 2fr 8fr;
+    grid-template-rows: 1fr;
+}
+.menu {
+    height: auto;
+    border-right: 1px solid rgb(244, 232, 232);    
+    /* overflow: scroll; */
+}
+.dash_boards {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    /* height: 50px; */
+    height: auto;
+    min-height: 50px;
+    cursor: pointer;
+}
+.dash_boards:hover {
+    background-color: rgb(10, 84, 221);
+    transition: 0.5s;
+    font-weight: bold;
+    color: white;
+}
+.dash_boards_drop{
+    width: 100%;
+    cursor: pointer;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.dash_boards_drop:hover{
+    background-color: rgb(10, 84, 221);
+    transition: 0.5s;
+    font-weight: bold;
+    color: white;
+}

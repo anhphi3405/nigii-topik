@@ -126,7 +126,7 @@ export default function Page() {
               <div>
                 <span style={{ fontSize : '24px'}}> {currentQuestion?.question_text} </span> <br />
               </div>
-              <div>
+              <div style={{display : currentQuestion?.question_audio ? 'block' : 'none'}}>
                 <FileDisplay fileId={currentQuestion?.question_audio}/>
               </div>
             {currentQuestion && currentQuestion.options.length > 0 ? (

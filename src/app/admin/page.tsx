@@ -33,7 +33,7 @@ export default function Admin() {
                     <div className={x['dash_boards_drop']}>
                         <span>Analytics</span>
                     </div>
-                    <div className={x['dash_boards_drop']}>
+                    <div className={x['dash_boards_drop']} onClick={() => router.push("/admin/exam")}>
                         <span>Exams</span>
                     </div>
                 </div>

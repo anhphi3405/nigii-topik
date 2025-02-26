@@ -78,4 +78,16 @@ const fetchQuestions = async({dispatch, axiosJWT, id}) => {
     }
 }
 
-export {loginUser, registerUser, logOut, fetchExams, fetchQuestions}; ;
+const fetchAllExams = async ({dispatch, axiosJWT}) =>{
+    dispatch(fetchStart());
+    try{
+        const res = await axiosJWT.get('http://localhost:5000/v1/exam/get_all');
+        dispatch(fetchSuccess(res.data));
+    }
+    catch(err){
+        dispatch(fetchFailure());
+        console.log(err);
+    }
+}
+
+export {loginUser, registerUser, logOut, fetchExams, fetchQuestions, fetchAllExams}; ;

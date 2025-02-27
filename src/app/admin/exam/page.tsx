@@ -1,6 +1,7 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, {  useEffect, useState } from 'react'
 import x from '@/layouts/admin/exam/exam.module.css'
+import y from '@/layouts/admin/exam/create.module.css'
 import { useAppSelector } from '@/redux/store'
 import { fetchStart ,
     fetchSuccess,
@@ -9,6 +10,7 @@ import { fetchStart ,
 import { fetchAllExams } from '@/redux/apiRequest'
 import ConfigAxios from '@/helper/config/configAxios'
 import { useDispatch } from 'react-redux'
+import { useRouter, useSearchParams } from 'next/navigation'
 interface Exam {
     examName : string;
     questions : [];
@@ -26,9 +28,17 @@ export default function Exam() {
     const exams = useAppSelector(state => state.exam.fetch.exams) as Exam[] | null;
     const [isActionOpen, setIsActionOpen] = useState(false);
     const [isCreateOpen, setIsCreateOpen] = useState(false);
-    // console.log(exams);
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const [selectedExamId, setSelectedExamId] = useState<string | null>(null);
+    useEffect(() =>{
+        const examId = searchParams.get('examId');
+        setSelectedExamId(examId);
+    }, [searchParams]);
     return (
-    <div className={x['container']}>
+    <div>
+        <div className={x['container']} style={{display : isActionOpen ? 'none' : 'flex'}}>
         {exams?.map((exam, index) => (
             <div key={index} className={x['exam']}>
                 <div style={{display : 'flex', alignItems : 'center', paddingLeft : '20px'}}>
@@ -38,7 +48,8 @@ export default function Exam() {
                     <i className="fa-solid fa-pencil"
                     onClick={() => {
                         setIsActionOpen(true)
-                        setIsCreateOpen(true)
+                        setIsEditOpen(true)
+                        router.push(`/admin/exam?edit&examId=${exam._id}`)
                     }}></i>
                     <i className="fa-solid fa-trash"
                     onClick={() => setIsActionOpen(true)}></i>
@@ -47,17 +58,75 @@ export default function Exam() {
                 </div>
             </div>
         ))}
-       {isActionOpen ? (
-        <CreateExam></CreateExam>
-       ) : null}
+        <div style={{display : 'flex', justifyContent : 'flex-end'}}> 
+            <button 
+            className={x['create-btn']}
+            onClick={() => {
+                setIsCreateOpen(true)
+                setIsActionOpen(true)
+                router.push(`/admin/exam?create`)
+            }}>Create Exam</button>
+        </div>
+        </div>
+        {isEditOpen && <EditExam examId={selectedExamId}/>}
+        {isCreateOpen && <CreateExam examId={selectedExamId
+        }/>}
     </div>
   )
 }
 
-function CreateExam() {
+function CreateExam({examId}) {
+    const create = () =>{
+        if(confirm("Are you sure you want to create this exam?")){
+            alert("Exam created successfully")
+        }
+        else{
+            alert("Exam creation failed")
+        }
+    }
+    return (
+        <div className={y['container']}>
+            <div style={{height : 'auto'}}>
+            <h1 className={y['base_text']}>Topik Exam</h1>
+            </div>
+            <div className={y['form']}>
+                <div style={{display : 'flex, gap : 20px', flexWrap : 'nowrap', flexDirection : 'row'}}>
+                    <div style={{display : 'flex', justifyContent : 'center', alignItems : 'center'}}>
+                        <h3 style={{color : 'rgb(3, 251, 180)', fontSize : '24px', fontWeight : 'bold'}}>Exams Name</h3>
+                    </div>
+                    <div>
+                        <input type="text" placeholder="Exam Name"
+                        style={{width : '100%', paddingLeft : 'calc(50% - 40px)', height : '40px',borderRadius : '5px', outline : 'none', border  : 'none'}}/>
+                    </div>
+                </div>
+                <div style={{display : 'flex, gap : 20px', flexWrap : 'nowrap', flexDirection : 'row'}}>
+                    <div style={{display : 'flex', justifyContent : 'center', alignItems : 'center'}}>
+                        <h3 style={{color : 'rgb(3, 251, 180)', fontSize : '24px', fontWeight : 'bold'}}>Type</h3>
+                    </div>
+                    <div>
+                        <input type="text" placeholder="Exam Type"
+                        style={{width : '100%', paddingLeft : 'calc(50% - 40px)',
+                        height : '40px',borderRadius : '5px', outline : 'none', border  : 'none'
+                        }}/>
+                    </div>
+                </div>
+                <div style={{marginTop : '20px', display : 'flex', justifyContent : 'center'}}>
+                    <button className={x['create-btn']}
+                    onClick={create}
+                    >
+                        Create
+                    </button>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+function EditExam({examId}) {
     return (
         <div>
-            <h1>haha</h1>
+            <h1>haha edit</h1>
+            {examId && <p>Exam ID: {examId}</p>}
         </div>
     )
 }

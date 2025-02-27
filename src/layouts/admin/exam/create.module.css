@@ -1,0 +1,43 @@
+.container{
+    height: 100vh;
+    background-image: url('https://img.freepik.com/free-photo/galactic-night-sky-astronomy-science-combined-generative-ai_188544-9656.jpg?t=st=1740669463~exp=1740673063~hmac=0f9a3f8ede74a86fec1ef6f0ec111e3bcc1bd9da19fdea24914ca0601a6cc961&w=1800');
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+}
+
+.base_text{
+    font-size: 56px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    background-image: linear-gradient( to right, #2006df,#0ad39e );
+    -webkit-background-clip: text;
+    color: transparent;
+
+}
+
+.form {
+    width: 50%;
+    margin: auto;
+}
+
+@media screen and (max-width: 992px) {
+    .form {
+        width: 70%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .form {
+        width: 80%;
+    }
+    
+}
+
+@media screen and (max-width: 576px) {
+    .form {
+        width: 95%;
+    }
+    
+}

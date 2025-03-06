@@ -1,9 +1,11 @@
 'use client'
 import React, {useState} from 'react'
-import x from "@/app/layouts/register/register.module.css"
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { registerUser } from '../redux/apiRequest';
+import { registerUser } from '@/redux/apiRequest';
+import x from '@/layouts/register/register.module.css';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
 export default function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -14,9 +16,11 @@ export default function Register() {
     const newUser   = {username, email, password};
     await registerUser({user : newUser, dispatch, navigate})
   }
+  const [isUseEmail, setIsUseEmail] = useState(false);
+  const router = useRouter();
   return (
     <div className={x['container']}>
-      <div className={x['content']}>
+      <div className={x['content']} style={{display : isUseEmail ? 'none' : 'grid'}}>
         <div>
           <h1 style={{fontSize : '24px', fontWeight : 'bolder'}}>Create Acount</h1>
         </div>
@@ -43,7 +47,59 @@ export default function Register() {
         <div>
           <button className={x['register']} onClick={register}>Register</button>
         </div>
+        <div>
+          <h3 style={{color : 'blue', cursor : 'pointer', fontSize : '16px', fontWeight : 'bold'}}
+          onClick={() => {setIsUseEmail(true);
+            router.push('/register?email=true')
+          }
+        }> Continue with your email  </h3>
+        </div>
       </div>
+      {isUseEmail && <RegisterEmail />}
     </div>
   )
+}
+
+function RegisterEmail() {
+  const [email, setEmail] = useState("");
+  const [isCheckCode, setIsCheckCode] = useState(false);
+  const randomCode = () =>{
+    return Math.floor(Math.random() * 1000000);
+  }
+  const submitEmail = () => {
+    const random_code = randomCode();
+    console.log(random_code);
+    try{
+      axios.post('http://localhost:5000/v1/auth/registerByEmail', {email, code : random_code})
+    }
+    catch(e){
+      console.log(e);
+    }
+  }
+  return (
+    <div>
+      <div style={{display : isCheckCode ? 'none' : 'block'}}>
+        <h3 style={{fontSize : '16px', fontWeight : "bold", textAlign : 'center'}}>Register with your email</h3>
+        <input type="text" placeholder='your email...' style={{width : '100%', paddingLeft : '10px'}}
+        onChange={(event)=> setEmail(event.target.value)}/>
+        <div style={{display : 'flex', justifyContent : 'center', marginTop : '10px'}}>
+          <button className={x['submit']}
+          onClick={() => {
+            submitEmail();
+            setIsCheckCode(true);
+          }}>Submit</button>
+        </div>
+      </div>
+        {isCheckCode && <CheckCode />}
+    </div>
+  )  
+}
+
+function CheckCode () {
+  return (
+    <div>
+      <h3 style={{fontSize : '16px', fontWeight : "bold", textAlign : 'center'}}>Please enter the code we sent you</h3>
+      <input type="text" placeholder='Enter the code...' style={{width : '100%', paddingLeft : 'calc(50% - 55px)'}}/>
+    </div>
+  );
 }

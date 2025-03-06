@@ -2,13 +2,13 @@
     display: grid;
     padding-left: 35%;
     padding-right: 35%;
-    height: 500px;
     margin-top: 70px;
+    min-height: calc(100vh - 255px);
 }
 
 .content{
     display: grid;
-    grid-template-rows: repeat(5, 1fr) 0.5fr 1fr;
+    grid-template-rows: repeat(5, 1fr) 0.5fr 1fr 1fr;
 }
 
 .content input {
@@ -20,6 +20,16 @@
     margin-right: 5px;
 }
 .register{
+    border: none;
+    outline: none;
+    width: 100px;
+    height: 30px;
+    background-color: blue;
+    color: white;
+}
+
+
+.submit {
     border: none;
     outline: none;
     width: 100px;

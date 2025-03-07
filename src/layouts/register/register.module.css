@@ -37,3 +37,12 @@
     background-color: blue;
     color: white;
 }
+
+.verify{
+    border: none;
+    outline: none;
+    width: 100px;
+    height: 30px;
+    background-color: blue;
+    color: white;
+}

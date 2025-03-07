@@ -96,10 +96,28 @@ function RegisterEmail() {
 }
 
 function CheckCode () {
+  const [code, setCode] = useState("");
+  const router = useRouter();
+  const sendCode = async () => {
+    try{
+      await axios.post('http://localhost:5000/v1/auth/checkcode', {code})
+      .then((res) => {
+        console.log(res.data);
+        alert('Register successfully');
+        router.push('/login');
+      })
+    }
+    catch(e){
+      console.log(e);
+    }
+  }
   return (
     <div>
       <h3 style={{fontSize : '16px', fontWeight : "bold", textAlign : 'center'}}>Please enter the code we sent you</h3>
-      <input type="text" placeholder='Enter the code...' style={{width : '100%', paddingLeft : 'calc(50% - 55px)'}}/>
+      <input type="text" placeholder='Enter the code...' style={{width : '100%', paddingLeft : 'calc(50% - 55px)'}}
+       onChange={(event) => setCode(event.target.value)}/>
+       <button className={x['verify']}
+       onClick={sendCode}>Verify</button>
     </div>
   );
 }

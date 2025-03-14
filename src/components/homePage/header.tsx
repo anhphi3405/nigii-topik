@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logOut } from '@/redux/apiRequest';
 import ConfigAxios from '@/helper/config/configAxios';
+import {logoutSuccess} from '@/redux/authSlice';
 
 interface User {
   accessToken: string;
@@ -24,7 +25,7 @@ export default function Header() {
   const id = user?._id as string;
   const axiosJWT = ConfigAxios.ConfigJWT();
   const logout = async()=>{
-    await logOut({ dispatch, navigate, id, accessToken , axiosJWT});
+    dispatch(logoutSuccess());
   }
   return (
     <div className={x["container"]}>

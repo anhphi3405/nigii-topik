@@ -103,12 +103,16 @@ function CheckCode () {
     }
   }
   return (
-    <div>
+    <div style = {{display : 'flex', flexDirection : 'column', gap : '10px'}}>
       <h3 style={{fontSize : '16px', fontWeight : "bold", textAlign : 'center'}}>Please enter the code we sent you</h3>
-      <input type="text" placeholder='Enter the code...' style={{width : '100%', paddingLeft : 'calc(50% - 55px)'}}
+      <div style = {{display : 'flex', justifyContent : 'center'}}>
+              <input type="text" placeholder='Enter the code...' style={{width : '40%', paddingLeft : 'calc(20% - 55px)'}}
        onChange={(event) => setCode(event.target.value)}/>
-       <button className={x['verify']}
+      </div>  
+       <div style = {{display : 'flex', justifyContent : 'center'}}>
+                <button className={y['verify']}
        onClick={sendCode}>Verify</button>
+       </div>
     </div>
   );
 }

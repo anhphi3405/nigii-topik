@@ -2,15 +2,18 @@
 import React, {  useEffect, useState } from 'react'
 import x from '@/layouts/admin/exam/exam.module.css'
 import y from '@/layouts/admin/exam/create.module.css'
+import z from '@/layouts/admin/exam/edit.module.css'
 import { useAppSelector } from '@/redux/store'
 import { fetchStart ,
     fetchSuccess,
     fetchFailure
  } from '@/redux/examSlice'
-import { fetchAllExams } from '@/redux/apiRequest'
+import { fetchAllExams, fetchQuestions } from '@/redux/apiRequest'
 import ConfigAxios from '@/helper/config/configAxios'
 import { useDispatch } from 'react-redux'
 import { useRouter, useSearchParams } from 'next/navigation'
+import axios from 'axios';
+import ReactPaginate from "react-paginate";
 interface Exam {
     examName : string;
     questions : [];
@@ -19,10 +22,19 @@ interface Exam {
     updatedAt : string;
     _id : string;
 }
+interface question {
+  correct_option : number,
+  explanation : string,
+  options : string[],
+  question_text : string
+  _id : string,
+  question_audio : string,
+  question_img : [string],
+}
 export default function Exam() {
     const dispatch = useDispatch();
     const axiosJWT = ConfigAxios.ConfigJWT();
-    useEffect(() =>{
+    useEffect(() =>{  
         fetchAllExams({dispatch, axiosJWT});
     }, []);
     const exams = useAppSelector(state => state.exam.fetch.exams) as Exam[] | null;
@@ -76,9 +88,22 @@ export default function Exam() {
 }
 
 function CreateExam({examId}) {
-    const create = () =>{
+    const [examName, setExamName] = useState("");
+    const [type, setType] = useState("");
+    console.log(examName + " " + type);
+    const create_exam = async () =>{
+        try{
+            axios.post('http://localhost:5000/v1/exam/create', {examName, type});
+
+        }
+        catch(e){
+          console.log(e);
+        }
+    }
+    const create = async () =>{
         if(confirm("Are you sure you want to create this exam?")){
-            alert("Exam created successfully")
+            await create_exam();
+            alert("create successfully !");
         }
         else{
             alert("Exam creation failed")
@@ -86,9 +111,6 @@ function CreateExam({examId}) {
     }
     return (
         <div className={y['container']}>
-            <div style={{height : 'auto'}}>
-            <h1 className={y['base_text']}>Topik Exam</h1>
-            </div>
             <div className={y['form']}>
                 <div style={{display : 'flex, gap : 20px', flexWrap : 'nowrap', flexDirection : 'row'}}>
                     <div style={{display : 'flex', justifyContent : 'center', alignItems : 'center'}}>
@@ -96,7 +118,8 @@ function CreateExam({examId}) {
                     </div>
                     <div>
                         <input type="text" placeholder="Exam Name"
-                        style={{width : '100%', paddingLeft : 'calc(50% - 40px)', height : '40px',borderRadius : '5px', outline : 'none', border  : 'none'}}/>
+                        style={{width : '100%', paddingLeft : 'calc(50% - 40px)', height : '40px',borderRadius : '5px', outline : 'none', border  : '1px solid black'}}
+                        onChange={(event) => setExamName(event.target.value)}/>
                     </div>
                 </div>
                 <div style={{display : 'flex, gap : 20px', flexWrap : 'nowrap', flexDirection : 'row'}}>
@@ -106,8 +129,9 @@ function CreateExam({examId}) {
                     <div>
                         <input type="text" placeholder="Exam Type"
                         style={{width : '100%', paddingLeft : 'calc(50% - 40px)',
-                        height : '40px',borderRadius : '5px', outline : 'none', border  : 'none'
-                        }}/>
+                        height : '40px',borderRadius : '5px', outline : 'none', border  : '1px solid black'
+                        }}
+                        onChange={(event) => setType(event.target.value)}/>
                     </div>
                 </div>
                 <div style={{marginTop : '20px', display : 'flex', justifyContent : 'center'}}>
@@ -121,12 +145,80 @@ function CreateExam({examId}) {
         </div>
     )
 }
-
+// style = {{}}
+// <div></div>
+// <h1></h1>
+// <button></button>
+// backgroundColor 
+// , color : 'white'
+//className = {z['']}
 function EditExam({examId}) {
+    const ITEMS_PER_PAGE = 5; // Số câu hỏi hiển thị mỗi trang
+    const dispatch = useDispatch();
+    const axiosJWT = ConfigAxios.ConfigJWT();
+    useEffect(()=>{
+        fetchQuestions({dispatch, axiosJWT, id:examId});
+    }, []);
+    const questions = useAppSelector((state) => state.questions.fetchQuestions.questions) as question[] | null;
+    console.log(questions);
+    // State quản lý phân trang
+    const [currentPage, setCurrentPage] = useState(0);
+
+    if (!questions) return <p>Loading...</p>;
+
+    // Tính toán dữ liệu cho trang hiện tại
+    const offset = currentPage * ITEMS_PER_PAGE;
+    const currentItems = questions.slice(offset, offset + ITEMS_PER_PAGE);
+    const pageCount = Math.ceil(questions.length / ITEMS_PER_PAGE);
+
+    // Xử lý khi đổi trang
+    const handlePageClick = (event: { selected: number }) => {
+      setCurrentPage(event.selected);
+    };
+    
+    const router = useRouter();
+
     return (
         <div>
-            <h1>haha edit</h1>
-            {examId && <p>Exam ID: {examId}</p>}
-        </div>
-    )
+          <h1 style = {{textAlign : 'center', fontSize : '24px'}}>Questions List</h1>
+          <div className = {z['list']}>
+            {currentItems.map((q, index) => (
+              <div key = {index} className = {z['item']} >
+                <div>
+                <h3 style = {{fontSize : '18px'}}> Question {offset + index + 1}  </h3>
+                </div>
+                <div>
+                    <i className="fa-solid fa-pencil"></i>
+                    <i className="fa-solid fa-trash"></i>
+                    <i className="fa-solid fa-eye"></i>
+                </div>
+              </div>
+            ))}
+          </div>
+
+      {/* Phân trang */}
+      <ReactPaginate
+        previousLabel="← Prev"
+        nextLabel="Next →"
+        breakLabel="..."
+        pageCount={pageCount}
+        onPageChange={handlePageClick}
+        containerClassName=  {z['pagination']} 
+        activeClassName={z['active']} 
+        disabledClassName= {z['disabled']} 
+        previousClassName= {z['previous']} 
+        nextClassName={z['next']} 
+      />    
+      <div className = {z['create']}>
+        <button className = {z['create-btn']}
+        onClick = {() => {
+          router.push(`/admin/question/create?examId=${examId}`);
+        }}>
+          Add question
+        </button>
+      </div>       
+      </div>
+    );
 }
+
+

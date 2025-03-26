@@ -1,9 +1,6 @@
 .container{
-    height: 100vh;
-    background-image: url('https://img.freepik.com/free-photo/galactic-night-sky-astronomy-science-combined-generative-ai_188544-9656.jpg?t=st=1740669463~exp=1740673063~hmac=0f9a3f8ede74a86fec1ef6f0ec111e3bcc1bd9da19fdea24914ca0601a6cc961&w=1800');
-    background-size: cover;
-    background-position: center;
     width: 100%;
+    margin-top: 10px;
 }
 
 .base_text{
